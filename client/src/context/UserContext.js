@@ -4,7 +4,10 @@ import { createContext, useState } from 'react';
 import Cookies from 'js-cookie';
 import { apiHelper } from '../utilities/apiHelper';
 
-const UserContext = createContext(null);
+const UserContext = createContext({
+    authUser: null,
+    actions: {},
+});
 
 export const UserProvider = (props) => {
     const cookie = Cookies.get("authenticatedUser");
@@ -13,6 +16,7 @@ export const UserProvider = (props) => {
 
     const signIn = async (credentials) => {
 
+        console.log(credentials)
         const response = await apiHelper("/users", "GET", null, credentials);
 
         if (response.status === 200) {

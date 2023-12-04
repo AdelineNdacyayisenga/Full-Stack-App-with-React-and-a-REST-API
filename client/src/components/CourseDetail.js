@@ -1,11 +1,12 @@
 import { useContext, useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { apiHelper } from '../utilities/apiHelper';
 
 
 const CourseDetail = () => {
     const { id } = useParams();
-    console.log(id)
+    const location = useLocation();
+    console.log(location.key)
     const [course, setCourse] = useState({}); //to keep track of the courses
     const [isLoaded, setIsLoaded] = useState(false);
     const navigate = useNavigate();

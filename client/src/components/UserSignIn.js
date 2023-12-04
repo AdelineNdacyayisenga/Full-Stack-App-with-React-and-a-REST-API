@@ -43,7 +43,7 @@ const UserSignIn = () => {
     }
     return (
 
-        <div class="form--centered">
+        <div className="form--centered">
                 <h2>Sign In</h2>
                 
                 <form onSubmit={handleSubmit}>

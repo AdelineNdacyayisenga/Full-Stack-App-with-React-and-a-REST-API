@@ -30,7 +30,7 @@ const UserSignUp = () => {
 
         try {
             const response = await apiHelper('/users', "POST", user);
-            //console.log(response);
+            console.log(response);
             if (response.status === 201) {
                 console.log(`${user.firstName} is successfully signed up and authenticated`);
                 await actions.signIn(user);
