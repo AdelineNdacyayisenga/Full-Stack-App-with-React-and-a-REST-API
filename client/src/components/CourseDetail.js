@@ -1,5 +1,6 @@
-import { useContext, useParams } from 'react';
+import { useContext } from 'react';
 import CourseContext from '../context/CourseContext';
+import { useParams } from 'react-router-dom';
 
 const CourseDetail = () => {
     const { id } = useParams();
