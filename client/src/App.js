@@ -7,6 +7,7 @@ import UserSignUp from './components/UserSignUp';
 import UserSignIn from './components/UserSignIn';
 import CreateCourse from './components/CreateCourse';
 import CourseDetail from './components/CourseDetail';
+import NotFound from './components/NotFound';
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
           <Route path="signin" element={<UserSignIn />} />
           <Route path="/courses/create" element={<CreateCourse />} />
           <Route path="/courses/:id" element={<CourseDetail />} />
+          <Route path="/*" element={<NotFound />} />;
         </Routes>
       </div>
   );
