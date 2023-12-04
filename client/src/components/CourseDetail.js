@@ -1,13 +1,15 @@
-import { useContext } from 'react';
+import { useContext, useParams } from 'react';
 import CourseContext from '../context/CourseContext';
 
-const CourseDetail = (course) => {
+const CourseDetail = () => {
+    const { id } = useParams();
     const { title } = useContext(CourseContext);
     const { description } = useContext(CourseContext);
     const { materialsNeeded } = useContext(CourseContext);
     const { courseMaker } = useContext(CourseContext);
     const { estimatedTime } = useContext(CourseContext);
 
+    console.log(id);
     console.log(title);
     console.log(description);
 
