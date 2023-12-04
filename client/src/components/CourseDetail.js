@@ -1,13 +1,13 @@
 import { useContext, useEffect, useState } from 'react';
-import CourseContext from '../context/CourseContext';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { apiHelper } from '../utilities/apiHelper';
-import Header from './Header';
+
 
 const CourseDetail = () => {
     const { id } = useParams();
-    const courseId = parseInt(id.substring(1,));
+    console.log(id)
     const [course, setCourse] = useState({}); //to keep track of the courses
+    const [isLoaded, setIsLoaded] = useState(false);
     const navigate = useNavigate();
 
     // const handleDelete = () => {
@@ -17,11 +17,12 @@ const CourseDetail = () => {
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const response = await apiHelper(`/courses/${courseId}`, "GET");
+                const response = await apiHelper(`/courses/${id}`, "GET");
 
                 if (response.status === 200) {
                     const course = await response.json();
                     setCourse(course);
+                    setIsLoaded(true);
                 } else if (response.status === 404) {
                     navigate('/notfound');
                 } else {
@@ -33,45 +34,47 @@ const CourseDetail = () => {
 
         }
         fetchCourses();
-    }, [courseId, navigate]);
+    }, [id, navigate]);
 
     console.log(course);
 
-    return (
-        <>
-            <div className="actions--bar">
-                <div className="wrap">
-                    <Link className="button" to="update-course.html">Update Course</Link>
-                    <Link className="button" to="#">Delete Course</Link>
-                    <Link className="button button-secondary" to="index.html">Return to List</Link>
-                </div>
-            </div>
-
-            <div className="wrap">
-                <h2>Course Detail</h2>
-                <form>
-                    <div className="main--flex">
-                        <div>
-                            <h3 className="course--detail--title">Course</h3>
-                            <h4 className="course--name">{`${course.title}`}</h4>
-                            <p>{`${course.courseMaker.firstName} ${course.courseMaker.lastName}`}</p>
-
-                            <p>{`${course.description}`}</p>
-                        </div>
-                        <div>
-                            <h3 className="course--detail--title">Estimated Time</h3>
-                            <p>`${course.estimatedTime}`</p>
-
-                            <h3 className="course--detail--title">Materials Needed</h3>
-                            <ul className="course--detail--list">
-                                {`${course.materialsNeeded}`}
-                            </ul>
-                        </div>
+    if (isLoaded) {
+        return (
+            <>
+                <div className="actions--bar">
+                    <div className="wrap">
+                        <Link className="button" to="update-course.html">Update Course</Link>
+                        <Link className="button" to="#">Delete Course</Link>
+                        <Link className="button button-secondary" to="index.html">Return to List</Link>
                     </div>
-                </form>
-            </div>
-        </>
-    );
+                </div>
+
+                <div className="wrap">
+                    <h2>Course Detail</h2>
+                    <form>
+                        <div className="main--flex">
+                            <div>
+                                <h3 className="course--detail--title">Course</h3>
+                                <h4 className="course--name">{`${course.title}`}</h4>
+                                <p>{`${course.courseMaker.firstName} ${course.courseMaker.lastName}`}</p>
+
+                                <p>{`${course.description}`}</p>
+                            </div>
+                            <div>
+                                <h3 className="course--detail--title">Estimated Time</h3>
+                                <p>`${course.estimatedTime}`</p>
+
+                                <h3 className="course--detail--title">Materials Needed</h3>
+                                <ul className="course--detail--list">
+                                    {`${course.materialsNeeded}`}
+                                </ul>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </>
+        );
+    }
 }
 
 export default CourseDetail;

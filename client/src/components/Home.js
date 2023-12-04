@@ -1,18 +1,36 @@
+import { useEffect, useState } from 'react';
+import { apiHelper } from '../utilities/apiHelper';
+import { NavLink } from 'react-router-dom';
+
 const Home = () => {
+    const [courses, setCourses] = useState([]);
+
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                const response = await apiHelper(`/courses`, "GET");
+                const courses = await response.json();
+                setCourses(courses);
+
+            } catch (error) {
+                console.log(error);
+            }
+
+        }
+        fetchCourses();
+    }, []);
+
     return (
         <div className="wrap main--grid">
-            <a className="course--module course--link" href="course-detail.html">
-                <h2 className="course--label">Course</h2>
-                <h3 className="course--title">Build a Basic Bookcase</h3>
-            </a>
-            <a className="course--module course--link" href="course-detail.html">
-                <h2 className="course--label">Course</h2>
-                <h3 className="course--title">Learn How to Program</h3>
-            </a>
-            <a className="course--module course--link" href="course-detail.html">
-                <h2 className="course--label">Course</h2>
-                <h3 className="course--title">Learn How to Test Programs</h3>
-            </a>
+            {
+                courses.map(course => (
+                    <NavLink to={`/courses/:${course.id}`} className="course--module course--link">
+                        <h2 className="course--label">Course</h2>
+                        <h3 className="course--title">{course.title}</h3>
+                    </NavLink>
+                ))
+            }
+            
             <a className="course--module course--add--module" href="create-course.html">
                 <span className="course--add--title">
                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"

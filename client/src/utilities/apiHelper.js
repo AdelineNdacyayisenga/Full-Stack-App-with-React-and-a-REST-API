@@ -20,7 +20,7 @@ export const apiHelper = (
     }
 
     if (credentials) {
-        const encodedCredentials = btoa(`${credentials.username}:${credentials.password}`); //creates a base 64 ASCII string
+        const encodedCredentials = btoa(`${credentials.emailAddress}:${credentials.password}`); //creates a base 64 ASCII string
         options.headers.Authorization = `Basic ${encodedCredentials}`;
     }
 

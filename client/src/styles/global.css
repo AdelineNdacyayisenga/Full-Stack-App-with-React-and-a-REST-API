@@ -119,6 +119,11 @@ header nav a:hover {
     padding: 1rem 0;
     margin: -2rem 0 2rem;
 }
+
+.validation--errors--label {
+    color: #dc3545;
+    font-size: 28px;
+}
 .validation--errors {
     background: #e9e5f0;
     padding: 1rem;
