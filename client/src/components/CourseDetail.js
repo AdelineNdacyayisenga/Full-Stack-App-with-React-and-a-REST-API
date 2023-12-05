@@ -63,8 +63,14 @@ const CourseDetail = () => {
             <>
                 <div className="actions--bar">
                     <div className="wrap">
-                        <Link className="button" to={`/courses/${course.id}/update`}>Update Course</Link>
-                        <button className="button" onClick={handleDelete}>Delete Course</button>
+                        {/*Only show the delete and update buttons if the authenticated user's id matches the course maker id*/}
+                        {
+                            authUser.id === course.userId ?
+                                <>
+                                    <Link className="button" to={`/courses/${course.id}/update`}>Update Course</Link>
+                                    <button className="button" onClick={handleDelete}>Delete Course</button>
+                                </> : null
+                        }
                         <Link className="button button-secondary" to="/">Return to List</Link>
                     </div>
                 </div>
