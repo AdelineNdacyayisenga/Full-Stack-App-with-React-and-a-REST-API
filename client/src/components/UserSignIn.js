@@ -1,6 +1,7 @@
 import UserContext from '../context/UserContext';
 import { useContext, useRef, useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
+import ErrorsDisplay from './ErrorsDisplay';
 
 const UserSignIn = () => {
     const { actions } = useContext(UserContext);
@@ -8,9 +9,10 @@ const UserSignIn = () => {
     //state
     const emailAddress = useRef(null);
     const password = useRef(null);
-    const [error, setErrors] = useState([]);
+    const [errors, setErrors] = useState([]);
 
     const location = useLocation();
+
 
     const navigate = useNavigate();
 
@@ -18,17 +20,24 @@ const UserSignIn = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        let from = '/';
+        if (location.state) {
+            from = location.state.from; 
+            console.log(from)
+        }
+
         const credentials = {
             emailAddress: emailAddress.current.value,
             password: password.current.value
         }
-        actions.signIn(emailAddress.current.value, password.current.value);
-        
         try {
             const user = await actions.signIn(credentials);
 
-            if(user) {
-                navigate(location.pathname);
+            if (user) {
+                //console.log(location)
+                
+                navigate(from); //redirect the user to the page the requested 
             } else {
                 setErrors(["Sign in was unsuccessful"]);
             }
@@ -39,13 +48,15 @@ const UserSignIn = () => {
 
     const handleCancel = (event) => {
         event.preventDefault();
-        //navigate('/');
+        navigate('/');
     }
     return (
 
         <div className="form--centered">
-                <h2>Sign In</h2>
-                
+            <h2><strong>Sign In</strong></h2>
+            <br />
+            <div>
+                <ErrorsDisplay errors={errors}/>
                 <form onSubmit={handleSubmit}>
                     <label >Email Address</label>
                     <input id="emailAddress" name="emailAddress" type="email" ref={emailAddress} />
@@ -54,8 +65,9 @@ const UserSignIn = () => {
                     <button className="button" type="submit">Sign In</button>
                     <button className="button button-secondary" onClick={handleCancel}>Cancel</button>
                 </form>
-                <p>Don't have a user account? Click here to <Link to="signup">sign up</Link>!</p>
-                
+            </div>
+            <br />
+            <p>Don't have a user account? Click here to <Link to="/signup">sign up</Link>!</p>
         </div>
     );
 }

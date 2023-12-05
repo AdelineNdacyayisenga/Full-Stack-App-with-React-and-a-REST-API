@@ -1,19 +1,26 @@
-import { useContext, useEffect, useState } from 'react';
-import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
+import { useEffect, useState, useContext } from 'react';
+import UserContext from '../context/UserContext';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { apiHelper } from '../utilities/apiHelper';
-
+import ReactMarkDown from 'react-markdown';
 
 const CourseDetail = () => {
     const { id } = useParams();
-    const location = useLocation();
-    console.log(location.key)
     const [course, setCourse] = useState({}); //to keep track of the courses
     const [isLoaded, setIsLoaded] = useState(false);
     const navigate = useNavigate();
+    const { authUser } = useContext(UserContext);
 
-    // const handleDelete = () => {
+    const handleDelete = async () => {
 
-    // }
+        try {     
+            const response = await apiHelper(`/courses/${id}`, "DELETE", authUser);
+            console.log(response); //This is the response I get from the deletion
+            
+        } catch(error) {
+            console.log(error);
+        }
+    }
 
     useEffect(() => {
         const fetchCourses = async () => {
@@ -37,16 +44,15 @@ const CourseDetail = () => {
         fetchCourses();
     }, [id, navigate]);
 
-    console.log(course);
-
     if (isLoaded) {
+        console.log(isLoaded)
         return (
             <>
                 <div className="actions--bar">
                     <div className="wrap">
-                        <Link className="button" to="update-course.html">Update Course</Link>
-                        <Link className="button" to="#">Delete Course</Link>
-                        <Link className="button button-secondary" to="index.html">Return to List</Link>
+                        <Link className="button" to={`/courses/:${course.id}/update`}>Update Course</Link>
+                        <Link className="button" onClick={handleDelete}>Delete Course</Link>
+                        <Link className="button button-secondary" to="/">Return to List</Link>
                     </div>
                 </div>
 
@@ -56,18 +62,18 @@ const CourseDetail = () => {
                         <div className="main--flex">
                             <div>
                                 <h3 className="course--detail--title">Course</h3>
-                                <h4 className="course--name">{`${course.title}`}</h4>
-                                <p>{`${course.courseMaker.firstName} ${course.courseMaker.lastName}`}</p>
-
-                                <p>{`${course.description}`}</p>
+                                <h4 className="course--name">{course.title}</h4>
+                                <p>By {course.courseMaker.firstName} {course.courseMaker.lastName}</p>
+                                <ReactMarkDown children={course.description} />
+                                
                             </div>
                             <div>
                                 <h3 className="course--detail--title">Estimated Time</h3>
-                                <p>`${course.estimatedTime}`</p>
+                                <p>{course.estimatedTime}</p>
 
                                 <h3 className="course--detail--title">Materials Needed</h3>
                                 <ul className="course--detail--list">
-                                    {`${course.materialsNeeded}`}
+                                    <ReactMarkDown children={course.materialsNeeded} />
                                 </ul>
                             </div>
                         </div>
@@ -109,4 +115,54 @@ const courseDetailEndPoint = `http://localhost:5000/api/courses/:${course.id}`;
     console.log(id);
     console.log(title);
     console.log(description);
+
+    
+    return (
+            <>
+                {
+                    authUser === null
+                        ?
+                        <>
+                            <p>To see the course details, you have to be signed in</p>
+                            <p>If you have an account sign in <Link to="/signin">here</Link></p>
+                            <p>If you don't have an account, please sign up <Link to="/signup">here</Link></p>
+                        </>
+                        :
+                        <>
+                            <div className="actions--bar">
+                                <div className="wrap">
+                                    <Link className="button" to="update-course.html">Update Course</Link>
+                                    <Link className="button" to="#">Delete Course</Link>
+                                    <Link className="button button-secondary" to="/">Return to List</Link>
+                                </div>
+                            </div>
+
+                            <div className="wrap">
+                                <h2>Course Detail</h2>
+                                <form>
+                                    <div className="main--flex">
+                                        <div>
+                                            <h3 className="course--detail--title">Course</h3>
+                                            <h4 className="course--name">{course.title}</h4>
+                                            <p>{course.courseMaker.firstName} {course.courseMaker.lastName}</p>
+
+                                            <p>{course.description}</p>
+                                        </div>
+                                        <div>
+                                            <h3 className="course--detail--title">Estimated Time</h3>
+                                            <p>{course.estimatedTime}</p>
+
+                                            <h3 className="course--detail--title">Materials Needed</h3>
+                                            <ul className="course--detail--list">
+                                                <ReactMarkDown children={course.materialsNeeded} />
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </>
+                }
+            </>
+
+        );
 */

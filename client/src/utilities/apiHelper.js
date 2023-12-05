@@ -20,6 +20,7 @@ export const apiHelper = (
         options.headers["Content-Type"] = "application/json; charset=utf-8";
     }
     if (credentials) {
+        console.log(credentials)
         const encodedCredentials = btoa(`${credentials.emailAddress}:${credentials.password}`); //creates a base 64 ASCII string
         
         options.headers.Authorization = `Basic ${encodedCredentials}`;

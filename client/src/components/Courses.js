@@ -17,7 +17,7 @@ const Courses = () => {
         }
         fetchCourses();
     }, []);
-    console.log(courses); //array of courses
+    //console.log(courses); //array of courses
 
     return (
         <div className="wrap main--grid">

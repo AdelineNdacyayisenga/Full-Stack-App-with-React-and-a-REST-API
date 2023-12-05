@@ -1,5 +1,5 @@
 import { useContext, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import UserContext from '../context/UserContext';
 import { apiHelper } from '../utilities/apiHelper';
 import ErrorsDisplay from './ErrorsDisplay';
@@ -7,6 +7,7 @@ import ErrorsDisplay from './ErrorsDisplay';
 const UserSignUp = () => {
     const {actions} = useContext(UserContext);
 
+    const navigate = useNavigate();
     //State
     const firstName = useRef(null);
     const lastName = useRef(null);
@@ -34,6 +35,12 @@ const UserSignUp = () => {
             if (response.status === 201) {
                 console.log(`${user.firstName} is successfully signed up and authenticated`);
                 await actions.signIn(user);
+                navigate('/');
+            } else if(response.status === 400) {
+                const data = await response.json();
+                setErrors(data.errors);
+            } else {
+                throw new Error();
             }
         } catch (error) {
             console.log(error);
@@ -42,7 +49,7 @@ const UserSignUp = () => {
 
     const handleCancel = (event) => {
         event.preventDefault();
-        
+        navigate('/');
     }
 
     return (
