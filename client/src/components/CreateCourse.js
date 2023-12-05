@@ -2,6 +2,7 @@ import { useRef, useState, useContext } from 'react';
 import { apiHelper } from '../utilities/apiHelper';
 import { Link, useNavigate } from 'react-router-dom';
 import UserContext from '../context/UserContext';
+import ErrorsDisplay from './ErrorsDisplay';
 
 const CreateCourse = () => {
 
@@ -33,12 +34,21 @@ const CreateCourse = () => {
 
         //add course to the server
         try {
-            
             const response = await apiHelper('/courses', "POST", course, authUser);
-            console.log(response);
+            
+            if (response.status === 201) {
+                console.log(`A course titled ${course.title} is successfully created!`);
+                navigate('/');
+            } else if (response.status === 400) { //if required values are missing
+                const data = await response.json();
+                setErrors(data.errors);
+            } else {
+                throw new Error();
+            }
             
         } catch(error) {
             console.log(error);
+            navigate('/error');
         }
     }
 
@@ -51,13 +61,7 @@ const CreateCourse = () => {
         
         <div className="wrap">
                 <h2>Create Course</h2>
-                <div className="validation--errors">
-                    <h3>Validation Errors</h3>
-                    <ul>
-                        <li>Please provide a value for "Title"</li>
-                        <li>Please provide a value for "Description"</li>
-                    </ul>
-                </div>
+                <ErrorsDisplay errors={errors}/>
                 <form onSubmit={handleSubmit}>
                     <div className="main--flex">
                         <div>

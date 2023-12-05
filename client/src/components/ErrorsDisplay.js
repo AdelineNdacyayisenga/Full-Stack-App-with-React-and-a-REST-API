@@ -6,8 +6,8 @@ const ErrorsDisplay = ({ errors }) => {
     if (errors.length) {
         errorsDisplay = (
             <div>
-                <h2 className="validation--errors--label">Validation errors</h2>
                 <div className="validation-errors">
+                    <h3>Validation Errors</h3>
                     <ul className="validation-errors">
                         {errors.map((error, i) => <li key={i}>{error}</li>)}
                     </ul>
@@ -16,7 +16,7 @@ const ErrorsDisplay = ({ errors }) => {
         )
     }
     return errorsDisplay;
-    
+
 }
 
 export default ErrorsDisplay;

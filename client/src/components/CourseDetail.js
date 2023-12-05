@@ -11,13 +11,26 @@ const CourseDetail = () => {
     const navigate = useNavigate();
     const { authUser } = useContext(UserContext);
 
+    //console.log(authUser);
+    //console.log(course);
+
     const handleDelete = async () => {
 
-        try {     
-            const response = await apiHelper(`/courses/${id}`, "DELETE", authUser);
-            console.log(response); //This is the response I get from the deletion
-            
-        } catch(error) {
+        try {
+            const response = await apiHelper(`/courses/${id}`, "DELETE", null, authUser);
+
+            if (response.status === 204) {
+                console.log('Course is deleted');
+                navigate('/');
+            } else if (response.status === 403) {
+                navigate('/forbidden');
+            } else if (response.status === 500) {
+                navigate('/error');
+            } else {
+                throw new Error();
+            }
+
+        } catch (error) {
             console.log(error);
         }
     }
@@ -50,8 +63,8 @@ const CourseDetail = () => {
             <>
                 <div className="actions--bar">
                     <div className="wrap">
-                        <Link className="button" to={`/courses/:${course.id}/update`}>Update Course</Link>
-                        <Link className="button" onClick={handleDelete}>Delete Course</Link>
+                        <Link className="button" to={`/courses/${course.id}/update`}>Update Course</Link>
+                        <button className="button" onClick={handleDelete}>Delete Course</button>
                         <Link className="button button-secondary" to="/">Return to List</Link>
                     </div>
                 </div>
@@ -65,7 +78,7 @@ const CourseDetail = () => {
                                 <h4 className="course--name">{course.title}</h4>
                                 <p>By {course.courseMaker.firstName} {course.courseMaker.lastName}</p>
                                 <ReactMarkDown children={course.description} />
-                                
+
                             </div>
                             <div>
                                 <h3 className="course--detail--title">Estimated Time</h3>
@@ -87,6 +100,16 @@ const CourseDetail = () => {
 export default CourseDetail;
 
 /* 
+Only show the delete and update buttons if the authenticated user's id matches the course maker id
+{
+    authUser.id === course.userId ?
+        <>
+            <Link className="button" to={`/courses/${course.id}/update`}>Update Course</Link>
+            <button className="button" onClick={handleDelete}>Delete Course</button>
+        </> : null
+}
+
+
 const courseDetailEndPoint = `http://localhost:5000/api/courses/:${course.id}`;
     const [courseDetail, setCourseDetail] = useState([]); //to keep track of the courses
 
