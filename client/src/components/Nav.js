@@ -2,6 +2,10 @@ import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import UserContext from '../context/UserContext';
 
+/**
+ * The navigation component; for user sign in, sign up, sign out links
+ * If user is signed in, a welcome message and a sign out link are displayed. Otherwise, there is an option to sign in or sign up
+ */
 const Nav = () => {
     const { authUser } = useContext(UserContext);
 

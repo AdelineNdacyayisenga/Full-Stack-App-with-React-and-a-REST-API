@@ -2,12 +2,20 @@ import { useEffect, useState } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { apiHelper } from '../utilities/apiHelper';
 
+/**
+ * A Home component that displays a list of courses available
+ * Each course links to its respective Course Detail screen
+ * This component also links to the Create Course screen
+ * @returns a list of all courses from the REST API's /api/courses route
+ */
+
 const Courses = () => {
     const [courses, setCourses] = useState([]); //to keep track of the courses
     const [isLoaded, setIsLoaded] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
+        //Fetch the courses
         const fetchCourses = async () => {
             try {
                 const response = await apiHelper("/courses", "GET");
@@ -29,6 +37,7 @@ const Courses = () => {
     }, [navigate]);
 
     if (isLoaded) {
+        //Display a list of courses and a create course link
         return (
             <div className="wrap main--grid">
                 {

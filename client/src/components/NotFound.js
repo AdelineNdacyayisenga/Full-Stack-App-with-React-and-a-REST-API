@@ -1,3 +1,6 @@
+/**
+ * Page Displayed when the requested routes doesn't exist
+ */
 const NotFound = () => {
     return (
         <div>

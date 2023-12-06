@@ -4,6 +4,13 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { apiHelper } from '../utilities/apiHelper';
 import ReactMarkDown from 'react-markdown';
 
+/**
+ * A component that retrieves the detail for a course from the REST API's /api/courses/:id
+ * 
+ * If the logged in user is the course owner, update and delete buttons are displayed to allow them to make changes
+ * 
+ * @returns a form with a course's details
+ */
 const CourseDetail = () => {
     const { id } = useParams();
     const [course, setCourse] = useState({}); //to keep track of the courses
@@ -12,9 +19,8 @@ const CourseDetail = () => {
     const { authUser } = useContext(UserContext);
 
     const handleDelete = async () => {
-
         try {
-            const response = await apiHelper(`/courses/${id}`, "DELETE", null, authUser);
+            const response = await apiHelper(`/courses/${id}`, "DELETE", null, authUser); //Can only delete if you are an authorized user
 
             if (response.status === 204) {
                 console.log('Course is deleted');
@@ -33,7 +39,8 @@ const CourseDetail = () => {
     }
 
     useEffect(() => {
-        const fetchCourses = async () => {
+        //Fetch the course information
+        const fetchCourse = async () => {
             try {
                 const response = await apiHelper(`/courses/${id}`, "GET");
 
@@ -51,11 +58,12 @@ const CourseDetail = () => {
             }
 
         }
-        fetchCourses();
+        fetchCourse();
     }, [id, navigate]);
 
     if (isLoaded) {
-        
+        //Only display the delete and update buttons if there is a user logged in and the logged in user id is the course maker's id
+        //Only the course owner can make changes to a course; everyone else can only view the course details
         return (
             <>
                 <div className="actions--bar">

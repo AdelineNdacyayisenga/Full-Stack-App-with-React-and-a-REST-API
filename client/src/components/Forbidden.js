@@ -1,3 +1,6 @@
+/**
+ * A screen the users sees when they access a page they are not authorized to access
+ */
 const Forbidden = () => {
     return (
         <div className="wrap">

@@ -1,3 +1,6 @@
+/**
+ * Any unxpected error
+ */
 const UnhandledError = () => {
     return (
         <div className="wrap">

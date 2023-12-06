@@ -3,6 +3,11 @@ import { useContext, useRef, useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import ErrorsDisplay from './ErrorsDisplay';
 
+/**
+ * A user sign in form. User needs email and password
+ * If the user doesn't have an account, there is a sign up link
+ * @returns User sign in form
+ */
 const UserSignIn = () => {
     const { actions } = useContext(UserContext);
 
@@ -20,22 +25,20 @@ const UserSignIn = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        let from = '/';
+        let from = '/'; //default previous path
         if (location.state) {
-            from = location.state.from; 
-            console.log(from)
+            from = location.state.from; //the path the user was requesting before being asked to sign in
         }
 
-        const credentials = {
+        const credentials = { //user credentials
             emailAddress: emailAddress.current.value,
             password: password.current.value
         }
         try {
-            const user = await actions.signIn(credentials);
+            const user = await actions.signIn(credentials); //using the Context actions sign method to sign in the user
 
             if (user) {
-                
-                navigate(from); //redirect the user to the page the requested 
+                navigate(from); //redirect the user to the page they requested 
             } else {
                 setErrors(["Sign in was unsuccessful"]);
             }

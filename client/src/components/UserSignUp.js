@@ -4,11 +4,14 @@ import UserContext from '../context/UserContext';
 import { apiHelper } from '../utilities/apiHelper';
 import ErrorsDisplay from './ErrorsDisplay';
 
+/**
+ * Component for user sign up. If user already has an account, there is a link to sign in 
+ */
 const UserSignUp = () => {
     const {actions} = useContext(UserContext);
 
     const navigate = useNavigate();
-    //State
+    //States for required fields
     const firstName = useRef(null);
     const lastName = useRef(null);
     const password = useRef(null);
@@ -19,7 +22,7 @@ const UserSignUp = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        //create the user
+        //create the user object with the current values
         const user = {
             firstName: firstName.current.value,
             lastName: lastName.current.value,
@@ -32,9 +35,9 @@ const UserSignUp = () => {
         try {
             const response = await apiHelper('/users', "POST", user);
             console.log(response);
-            if (response.status === 201) {
+            if (response.status === 201) { //if user is created
                 console.log(`${user.firstName} is successfully signed up and authenticated`);
-                await actions.signIn(user);
+                await actions.signIn(user); //automatically sign in the user
                 navigate('/');
             } else if(response.status === 400) {
                 const data = await response.json();

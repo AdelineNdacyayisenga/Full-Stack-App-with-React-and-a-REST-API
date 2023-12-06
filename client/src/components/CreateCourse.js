@@ -4,6 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import UserContext from '../context/UserContext';
 import ErrorsDisplay from './ErrorsDisplay';
 
+/**
+ * A component that allows a user to create a course
+ * Any user can create a form, but they have to sign in first. Otherwise, trying to access the page will redirect them to the sign in page
+ * A create course button sends a POST request to the REST API's /api/courses route
+ * This path is under the Private Route element; only authorized users can create courses
+ * @returns a create course form
+ */
 const CreateCourse = () => {
 
     const { authUser } = useContext(UserContext);

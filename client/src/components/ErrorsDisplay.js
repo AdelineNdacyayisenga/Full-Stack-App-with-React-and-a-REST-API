@@ -1,4 +1,8 @@
-//takes in a prop of errors array
+/**
+ * @param {object} errors- Will include all errors thrown during the fetch to the API and display them to the screen
+ * Includes validation errors set up on the api
+ * @returns errors for the user to maker right changes
+ */
 const ErrorsDisplay = ({ errors }) => {
 
     let errorsDisplay = null;

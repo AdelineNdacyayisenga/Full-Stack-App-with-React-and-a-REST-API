@@ -1,6 +1,10 @@
 
 import { Link } from 'react-router-dom';
 import Nav from './Nav';
+
+/**
+ * Main Header; links to the courses list
+ */
 const Header = () => {
     return (
         <header>
