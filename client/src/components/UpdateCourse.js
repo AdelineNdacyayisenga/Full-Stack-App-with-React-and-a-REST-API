@@ -35,7 +35,7 @@ const UpdateCourse = () => {
                 setCourseMaker(currentCourse.courseMaker); //Owner of the current course to be updated
 
                 //if the user isn't the course owner, deny them access to the update page
-                if(authUser.id !== courseMaker.id) { 
+                if(authUser.id !== currentCourse.courseMaker.id) { 
                     navigate('/forbidden');
                 } else {
                     setTitle(currentCourse.title);
