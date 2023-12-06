@@ -1,64 +1,66 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useRef, useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import UserContext from "../context/UserContext";
 import { apiHelper } from '../utilities/apiHelper';
+import ErrorsDisplay from "./ErrorsDisplay";
 
 const UpdateCourse = () => {
-    const [prevTitle, setPrevTitle] = useState("");
-    const [prevDescription, setPrevDescription] = useState("");
-    const [prevMaterialsNeeded, setPrevMaterialsNeeded] = useState("");
-    const [prevEstimatedTime, setPreviousEstimatedTime] = useState("");
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [materialsNeeded, setMaterialsNeeded] = useState("");
+    const [estimatedTime, setEstimatedTime] = useState("");
 
     const { authUser } = useContext(UserContext);
     const { id } = useParams();
 
     //Get current course value
-
-    const fetchCourse = async () => {
-        const response = await apiHelper(`/courses/${id}`, "GET");
-
-        if (response.status === 200) {
-            const currentCourse = await response.json();
-            setPrevTitle(currentCourse.title);
-            setPrevDescription(currentCourse.description);
-            setPrevMaterialsNeeded(currentCourse.materialsNeeded);
-            setPreviousEstimatedTime(setPreviousEstimatedTime);
-        } else if (response.status === 401) {
-            return null;
-        } else {
-            throw new Error();
-        }
-    }
-    fetchCourse();
     
+    useEffect( () => {
+        const fetchCourse = async () => {
+            const response = await apiHelper(`/courses/${id}`, "GET");
+    
+            if (response.status === 200) {
+                const currentCourse = await response.json();
+                setTitle(currentCourse.title);
+                setDescription(currentCourse.description);
+                setMaterialsNeeded(currentCourse.materialsNeeded);
+                setEstimatedTime(currentCourse.estimatedTime);
+            } else if (response.status === 401) {
+                return null;
+            } else {
+                throw new Error();
+            }
+        }
+        fetchCourse();
+    }, [id]);
 
-    const [course, setCourse] = useState();
-
-    const title = useRef(null);
-    const description = useRef(null);
-    const estimatedTime = useRef(null);
-    const materialsNeeded = useRef(null);
-    const courseMaker = authUser;
     const [errors, setErrors] = useState([]);
-    const navigate = useNavigate();
 
+    const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        const course = {
-            title: title.current.value,
-            description: description.current.value,
-            estimatedTime: estimatedTime.current.value,
-            materialsNeeded: materialsNeeded.current.value,
-            userId: courseMaker.id
-            //courseMaker: courseMaker.current.value
+        const currentCourse = {
+            title: title,
+            description,
+            estimatedTime,
+            materialsNeeded
         }
-
         try {
-            const response = await apiHelper(`/courses/${id}`, "PUT", course, authUser);
-            console.log(response); //then I would get the data by calling response.json()
-
+            const response = await apiHelper(`/courses/${id}`, "PUT", currentCourse, authUser);
+            if (response.status === 204) {
+                console.log("Course successfully updated!");
+                navigate(`/courses/${id}`);
+            } else if (response.status === 403) {//unauthorized
+                navigate('/forbidden');
+            } else if (response.status === 400) { //not providing the required fields
+                const data = await response.json();
+                setErrors(data.errors);
+            } else if (response.status === 500) {
+                navigate("/error");
+            } else {
+                navigate("/notfound");
+            }
 
         } catch (error) {
             console.log(error);
@@ -68,26 +70,31 @@ const UpdateCourse = () => {
         event.preventDefault();
         navigate('/');
     }
+    
     return (
         <div className="wrap">
             <h2>Update Course</h2>
+            <ErrorsDisplay errors={errors} />
             <form onSubmit={handleSubmit}>
                 <div className="main--flex">
                     <div>
-                        <label htmlFor="courseTitle">Course Title</label>
-                        <input id="courseTitle" name="courseTitle" type="text" ref={title} value={prevTitle} onChange={title} />
+                        <label >Course Title
+                        <input id="courseTitle" name="courseTitle" type="text" value={title} onChange={e => setTitle(e.target.value)}  />
+                        </label>
 
-                        <p>By {courseMaker.firstName} {courseMaker.lastName}</p>
+                        <p>By {authUser.firstName} {authUser.lastName}</p>
 
-                        <label htmlFor="courseDescription">Course Description</label>
-                        <textarea id="courseDescription" name="courseDescription" ref={description}></textarea>
+                        <label >Course Description</label>
+                        <textarea id="courseDescription" name="courseDescription" value={description} onChange={e => setDescription(e.target.value)}></textarea>
                     </div>
                     <div>
                         <label htmlFor="estimatedTime">Estimated Time</label>
-                        <input id="estimatedTime" name="estimatedTime" type="text" ref={estimatedTime} />
+                        <input id="estimatedTime" name="estimatedTime" type="text"
+                        value={estimatedTime} onChange={(e) => setEstimatedTime(e.target.value)}  />
 
                         <label htmlFor="materialsNeeded">Materials Needed</label>
-                        <textarea id="materialsNeeded" name="materialsNeeded" ref={materialsNeeded}></textarea>
+                        <textarea id="materialsNeeded" name="materialsNeeded"
+                        value={materialsNeeded} onChange={(e) => setMaterialsNeeded(e.target.value)}></textarea>
                     </div>
                 </div>
                 <button className="button" type="submit">Update Course</button>

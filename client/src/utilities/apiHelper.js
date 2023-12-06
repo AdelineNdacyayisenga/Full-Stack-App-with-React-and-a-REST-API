@@ -7,7 +7,6 @@ export const apiHelper = (
     credentials = null
     ) => {
     const url = "http://localhost:5000/api" + path;
-    
 
     const options = {
         method: method,

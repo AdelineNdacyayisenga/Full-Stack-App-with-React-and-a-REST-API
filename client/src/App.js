@@ -26,6 +26,7 @@ function App() {
         <Route path="/signout" element={<UserSignOut />} />
         <Route path="/error" element={<UnhandledError />} />
         <Route path="/forbidden" element={<Forbidden />} />
+        <Route path="/notfound" element={<NotFound />} />
         <Route path="/courses/:id" element={<CourseDetail />} />
         <Route element={<PrivateRoute />}>
           <Route path="/courses/:id/update" element={<UpdateCourse />} />
@@ -38,29 +39,3 @@ function App() {
 }
 
 export default App;
-
-/**
- * const coursesEndPoint = "http://localhost:5000/api/courses";
- * const [courses, setCourses] = useState([]); //to keep track of the courses
-
-  useEffect( () => {
-    function fetchCourses() {
-      try {
-        fetch(coursesEndPoint)
-        .then(res => res.json())
-        .then(data => setCourses(data));
-      } catch(error) {
-        console.log(error);
-      }
-    }
-    fetchCourses();
-  }, []);
-  //console.log(courses); //array of courses
-
-  const courseTitles = [];
-  for(let i = 0; i < courses.length; i ++) {
-    courseTitles.push(
-      <div>{courses[i].title}</div>
-    );
-  }
- */

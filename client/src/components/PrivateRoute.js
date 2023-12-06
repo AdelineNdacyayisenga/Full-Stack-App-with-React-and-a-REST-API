@@ -6,9 +6,7 @@ const PrivateRoute = () => {
     const { authUser } = useContext(UserContext);
 
     const location = useLocation();
-    console.log(location);
-
-    console.log(authUser);
+    
     if(authUser) {
         return <Outlet />
     } else {

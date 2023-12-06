@@ -5,14 +5,14 @@ const ErrorsDisplay = ({ errors }) => {
 
     if (errors.length) {
         errorsDisplay = (
-            <div>
-                <div className="validation-errors">
+            <>
+                <div className="validation--errors">
                     <h3>Validation Errors</h3>
-                    <ul className="validation-errors">
+                    <ul>
                         {errors.map((error, i) => <li key={i}>{error}</li>)}
                     </ul>
                 </div>
-            </div>
+            </>
         )
     }
     return errorsDisplay;

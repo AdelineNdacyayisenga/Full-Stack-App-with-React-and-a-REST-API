@@ -13,7 +13,6 @@ const UserSignIn = () => {
 
     const location = useLocation();
 
-
     const navigate = useNavigate();
 
     //event handlers 
@@ -35,7 +34,6 @@ const UserSignIn = () => {
             const user = await actions.signIn(credentials);
 
             if (user) {
-                //console.log(location)
                 
                 navigate(from); //redirect the user to the page the requested 
             } else {
